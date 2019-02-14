@@ -1,0 +1,79 @@
+{
+  "name": "@femessage/el-select-area",
+  "version": "1.0.0",
+  "description": "",
+  "author": "https://github.com/FEMessage",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FEMessage/el-select-area.git"
+  },
+  "keywords": ["vue", "sfc", "component"],
+  "main": "dist/el-select-area.umd.js",
+  "module": "dist/el-select-area.esm.js",
+  "unpkg": "dist/el-select-area.min.js",
+  "browser": {
+    "./sfc": "src/el-select-area.vue"
+  },
+  "scripts": {
+    "styleguide": "vue-styleguidist server",
+    "story": "start-storybook -p 9001 -c .storybook",
+    "story:build": "build-storybook -c .storybook -o docs/storybook",
+    "doc": "vue-styleguidist build",
+    "test": "jest",
+    "build":
+      "npm run build:unpkg & npm run build:es & npm run build:umd & npm run doc & npm run story:build",
+    "build:umd":
+      "rollup --config build/rollup.config.js --format umd --file dist/el-select-area.umd.js",
+    "build:es":
+      "rollup --config build/rollup.config.js --format es --file dist/el-select-area.esm.js",
+    "build:unpkg":
+      "rollup --config build/rollup.config.js --format iife --file dist/el-select-area.min.js",
+    "prepublishOnly": "npm run build",
+    "precommit": "pretty-quick --staged",
+    "postpublish": "git add docs && git add dist && git commit -a --amend"
+  },
+  "peerDependencies": {
+    "element-ui": "^2.5.4",
+    "vue": "^2.5.16"
+  },
+  "dependencies": {
+    "element-ui": "^2.5.4",
+    "lodash.find": "^4.6.0"
+  },
+  "devDependencies": {
+    "minimist": "^1.2.0",
+    "rollup": "^0.57.1",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-uglify-es": "0.0.1",
+    "rollup-plugin-vue": "^3.0.0",
+    "vue": "^2.5.16",
+    "vue-template-compiler": "^2.5.16",
+    "husky": "^0.14.3",
+    "prettier": "1.12.1",
+    "pretty-quick": "^1.4.1",
+    "@vue/test-utils": "^1.0.0-beta.16",
+    "babel-jest": "^23.0.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "jest": "^23.1.0",
+    "vue-jest": "^2.6.0",
+    "vue-styleguidist": "1.7.7",
+    "webpack": "^3.10.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "@storybook/vue": "^3.4.10"
+  },
+  "files": ["src", "dist", "yarn.lock"],
+  "jest": {
+    "moduleFileExtensions": ["js", "vue"],
+    "transform": {
+      "^.+\\.js$": "./node_modules/babel-jest",
+      "^.+\\.vue$": "./node_modules/vue-jest"
+    }
+  },
+  "engines": {
+    "node": ">= 4.0.0",
+    "npm": ">= 3.0.0"
+  }
+}
