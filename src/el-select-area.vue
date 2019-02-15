@@ -446,12 +446,4 @@ export default {
   margin-right: 10px;
   vertical-align: middle;
 }
-
-.el-select-area .select-area-empty {
-  padding: 4px 0;
-  margin: 0;
-  text-align: center;
-  color: #999;
-  font-size: 14px;
-}
 </style>
