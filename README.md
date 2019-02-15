@@ -1,6 +1,5 @@
 # el-select-area
 
-地区选择三级联动
 ![introduce](http://thyrsi.com/t6/670/1550217570x2890174243.gif)
 
 ## Table of Contents
@@ -49,7 +48,7 @@ yarn add element-ui
 
 ```vue
 // Step1 安装
-yarn add el-select-area 
+yarn add @femessage/el-select-area 
 
 // Step2 在需要的.vue 文件中
 <template>
