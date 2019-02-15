@@ -1,7 +1,9 @@
 import {storiesOf} from '@storybook/vue'
 import Basic from './basic.vue'
 import DefaultValue from './default-value.vue'
-import responseType from './response-type.vue'
+import ResponseType from './response-type.vue'
+import Level from './level.vue'
+import Disabled from './disbaled.vue'
 
 import Vue from 'vue'
 import ElementUI from 'element-ui'
@@ -18,6 +20,14 @@ storiesOf('el-select-area', module)
     components: {DefaultValue}
   }))
   .add('response-type', () => ({
-    template: `<responseType/>`,
-    components: {responseType}
+    template: `<ResponseType/>`,
+    components: {ResponseType}
+  }))
+  .add('level', () => ({
+    template: `<Level/>`,
+    components: {Level}
+  }))
+  .add('disabled', () => ({
+    template: `<Disabled/>`,
+    components: {Disabled}
   }))
