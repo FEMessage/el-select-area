@@ -16,7 +16,6 @@
 
 <script>
 import find from 'lodash.find'
-import {Select, Option} from 'element-ui'
 import arealist from './arealist'
 
 const TAIWAN_CODE = '710000'
@@ -33,10 +32,6 @@ function isArray(param) {
 
 export default {
   name: 'ElAreaSelect',
-  components: {
-    'el-select': Select,
-    'el-option': Option
-  },
   props: {
     /**
      * 地区选中值，数组，必填，没有选中值，传[]
