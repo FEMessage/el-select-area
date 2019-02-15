@@ -19,6 +19,8 @@ import find from 'lodash.find'
 import {Select, Option} from 'element-ui'
 import arealist from './arealist'
 
+const TAIWAN_CODE = '710000'
+
 function assert(condition, msg = '') {
   if (!condition) {
     console.error(`[area-select]: ${msg}`)
@@ -269,7 +271,7 @@ export default {
         case 1:
           codes = [
             this.curProvinceCode,
-            this.curProvinceCode === '710000'
+            this.curProvinceCode === TAIWAN_CODE
               ? this.curProvinceCode
               : this.curCityCode
           ]
@@ -277,7 +279,7 @@ export default {
         case 2:
           codes = [
             this.curProvinceCode,
-            this.curProvinceCode === '710000'
+            this.curProvinceCode === TAIWAN_CODE
               ? this.curProvinceCode
               : this.curCityCode,
             this.curAreaCode
@@ -299,13 +301,17 @@ export default {
           // fix #32 710000是台湾省
           texts = [
             this.curProvince,
-            this.curProvinceCode === '710000' ? this.curProvince : this.curCity
+            this.curProvinceCode === TAIWAN_CODE
+              ? this.curProvince
+              : this.curCity
           ]
           break
         case 2:
           texts = [
             this.curProvince,
-            this.curProvinceCode === '710000' ? this.curProvince : this.curCity,
+            this.curProvinceCode === TAIWAN_CODE
+              ? this.curProvince
+              : this.curCity,
             this.curArea
           ]
           break
@@ -329,11 +335,13 @@ export default {
           break
         case 2:
           const cityCode =
-            this.curProvinceCode === '710000'
+            this.curProvinceCode === TAIWAN_CODE
               ? this.curProvinceCode
               : this.curCityCode
           const cityText =
-            this.curProvinceCode === '710000' ? this.curProvince : this.curCity
+            this.curProvinceCode === TAIWAN_CODE
+              ? this.curProvince
+              : this.curCity
           textCodes = [
             {[this.curProvinceCode]: this.curProvince},
             {[cityCode]: cityText},
