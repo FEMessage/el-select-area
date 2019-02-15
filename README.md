@@ -1,6 +1,7 @@
 # el-select-area
 
 地区选择三级联动
+![introduce](http://thyrsi.com/t6/670/1550217570x2890174243.gif)
 
 ## Table of Contents
 
@@ -11,6 +12,8 @@
   * [Demo](#demo)
   * [Install](#install)
   * [Example](#example)
+    * [设置级联数](#%E8%AE%BE%E7%BD%AE%E7%BA%A7%E8%81%94%E6%95%B0)
+    * [设置返回值类型](#%E8%AE%BE%E7%BD%AE%E8%BF%94%E5%9B%9E%E5%80%BC%E7%B1%BB%E5%9E%8B)
   * [Props](#props)
   * [License](#license)
 
@@ -72,6 +75,14 @@ export default {
 [⬆ Back to Top](#table-of-contents)
 
 ## Example
+
+#### 设置级联数
+
+![level](http://thyrsi.com/t6/670/1550217603x2890174243.gif)
+
+#### 设置返回值类型
+
+![res](http://thyrsi.com/t6/670/1550217628x2890174243.gif)
 
 [⬆ Back to Top](#table-of-contents)
 
