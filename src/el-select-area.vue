@@ -1,14 +1,14 @@
 <template>
-  <div class="el-area-select">
-    <el-select :class="'area-select'" v-model="curProvinceCode" :placeholder="placeholders[0]||'请选择'" :size="size" :disabled="disabled">
+  <div class="el-select-area">
+    <el-select :class="'select-area'" v-model="curProvinceCode" :placeholder="placeholders[0]||'请选择'" :size="size" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in provinces" :key="key"></el-option>
     </el-select>
 
-    <el-select :class="'area-select'" v-model="curCityCode" :placeholder="placeholders[1] ||'请选择'" :size="size" v-if="level>=1" :disabled="disabled">
+    <el-select :class="'select-area'" v-model="curCityCode" :placeholder="placeholders[1] ||'请选择'" :size="size" v-if="level>=1" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in citys" :key="key"></el-option>
     </el-select>
 
-    <el-select :class="'area-select'" v-model="curCountyCode" :placeholder="placeholders[2]||'请选择'" :size="size" v-if="level>=2" :disabled="disabled">
+    <el-select :class="'select-area'" v-model="curCountyCode" :placeholder="placeholders[2]||'请选择'" :size="size" v-if="level>=2" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in countys" :key="key"></el-option>
     </el-select>
   </div>
@@ -23,7 +23,7 @@ const TAIWAN_CODE = '710000'
 
 function assert(condition, msg = '') {
   if (!condition) {
-    console.error(`[area-select]: ${msg}`)
+    console.error(`[select-area]: ${msg}`)
   }
 }
 
@@ -439,16 +439,16 @@ export default {
 </script>
 
 <style>
-.el-area-select {
+.el-select-area {
   font-size: 0;
 }
-.el-area-select .area-select {
+.el-select-area .select-area {
   margin-right: 10px;
   display: inline-block;
   vertical-align: middle;
 }
 
-.el-area-select .area-select-empty {
+.el-select-area .select-area-empty {
   padding: 4px 0;
   margin: 0;
   text-align: center;
