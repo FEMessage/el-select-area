@@ -1,6 +1,6 @@
 # el-select-area
 
-项目简要说明 + 示例图
+地区选择三级联动
 
 ## Table of Contents
 
