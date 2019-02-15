@@ -8,7 +8,7 @@
       <el-option :label="val" :value="key" v-for="(val, key) in citys" :key="key"></el-option>
     </el-select>
 
-    <el-select :class="'area-select'" v-model="curAreaCode" :placeholder="placeholders[2]||'请选择'" :size="size" v-if="level>=2" :disabled="disabled">
+    <el-select :class="'area-select'" v-model="curCountyCode" :placeholder="placeholders[2]||'请选择'" :size="size" v-if="level>=2" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in countys" :key="key"></el-option>
     </el-select>
   </div>
@@ -110,8 +110,8 @@ export default {
       curProvinceCode: '', // code
       curCity: '',
       curCityCode: '',
-      curArea: '',
-      curAreaCode: '',
+      curCounty: '',
+      curCountyCode: '',
 
       // 设置默认值的判断
       defaults: [],
@@ -131,8 +131,8 @@ export default {
       this.cityChange(val)
     },
 
-    curAreaCode(val, oldVal) {
-      this.curArea = this.countys[val]
+    curCountyCode(val, oldVal) {
+      this.curCounty = this.countys[val]
       this.areaChange(val)
     },
 
@@ -140,7 +140,7 @@ export default {
       if (isArray(val) && !val.length) {
         this.curProvinceCode = ''
         this.curCityCode = ''
-        this.curAreaCode = ''
+        this.curCountyCode = ''
         this.$nextTick(() => {
           this.citys = {}
           this.countys = {}
@@ -219,45 +219,45 @@ export default {
           this.countys = {
             [this.curCityCode]: this.curCity
           }
-          this.curArea = this.curCity
-          this.curAreaCode = this.curCityCode
+          this.curCounty = this.curCity
+          this.curCountyCode = this.curCityCode
           return
         }
 
-        let curArea = Object.values(this.countys)[0]
-        let curAreaCode = Object.keys(this.countys)[0]
+        let curCounty = Object.values(this.countys)[0]
+        let curCountyCode = Object.keys(this.countys)[0]
 
         if (this.defaults[2]) {
           if (this.isCode) {
-            curAreaCode = find(
+            curCountyCode = find(
               Object.keys(this.countys),
               item => item === this.defaults[2]
             )
             assert(
-              curAreaCode,
+              curCountyCode,
               `县区 ${this.defaults[2]} 不存在于城市 ${this.defaults[1]} 中`
             )
-            curArea = this.countys[curAreaCode]
+            curCounty = this.countys[curCountyCode]
           } else {
-            curArea = find(this.countys, item => item === this.defaults[2])
+            curCounty = find(this.countys, item => item === this.defaults[2])
             assert(
-              curArea,
+              curCounty,
               `县区 ${this.defaults[2]} 不存在于城市 ${this.defaults[1]} 中`
             )
-            curAreaCode = find(
+            curCountyCode = find(
               Object.keys(this.countys),
               item => this.countys[item] === this.defaults[2]
             )
           }
         }
 
-        this.curArea = curArea
-        this.curAreaCode = curAreaCode
+        this.curCounty = curCounty
+        this.curCountyCode = curCountyCode
       }
     },
 
     areaChange(val) {
-      this.curAreaCode = val
+      this.curCountyCode = val
       this.selectChange()
     },
 
@@ -282,7 +282,7 @@ export default {
             this.curProvinceCode === TAIWAN_CODE
               ? this.curProvinceCode
               : this.curCityCode,
-            this.curAreaCode
+            this.curCountyCode
           ]
           break
       }
@@ -312,7 +312,7 @@ export default {
             this.curProvinceCode === TAIWAN_CODE
               ? this.curProvince
               : this.curCity,
-            this.curArea
+            this.curCounty
           ]
           break
       }
@@ -345,7 +345,7 @@ export default {
           textCodes = [
             {[this.curProvinceCode]: this.curProvince},
             {[cityCode]: cityText},
-            {[this.curAreaCode]: this.curArea}
+            {[this.curCountyCode]: this.curCounty}
           ]
           break
       }
