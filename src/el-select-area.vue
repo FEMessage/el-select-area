@@ -1,14 +1,14 @@
 <template>
   <div class="el-select-area">
-    <el-select :class="'select-area'" v-model="curProvinceCode" :placeholder="placeholders[0]||'请选择'" :size="size" :disabled="disabled">
+    <el-select class='select-area-item' v-model="curProvinceCode" :placeholder="placeholders[0]||'请选择'" :size="size" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in provinces" :key="key"></el-option>
     </el-select>
 
-    <el-select :class="'select-area'" v-model="curCityCode" :placeholder="placeholders[1] ||'请选择'" :size="size" v-if="level>=1" :disabled="disabled">
+    <el-select class='select-area-item' v-model="curCityCode" :placeholder="placeholders[1] ||'请选择'" :size="size" v-if="level>=1" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in citys" :key="key"></el-option>
     </el-select>
 
-    <el-select :class="'select-area'" v-model="curCountyCode" :placeholder="placeholders[2]||'请选择'" :size="size" v-if="level>=2" :disabled="disabled">
+    <el-select class='select-area-item' v-model="curCountyCode" :placeholder="placeholders[2]||'请选择'" :size="size" v-if="level>=2" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in countys" :key="key"></el-option>
     </el-select>
   </div>
@@ -442,9 +442,8 @@ export default {
 .el-select-area {
   font-size: 0;
 }
-.el-select-area .select-area {
+.el-select-area .select-area-item {
   margin-right: 10px;
-  display: inline-block;
   vertical-align: middle;
 }
 
