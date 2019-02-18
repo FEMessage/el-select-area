@@ -10,7 +10,7 @@
 export default {
   data() {
     return {
-      area1: []
+      area1: ['330000', '330700', '330727']
     }
   }
 }

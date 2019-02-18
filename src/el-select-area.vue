@@ -1,14 +1,14 @@
 <template>
   <div class="el-select-area">
-    <el-select class='select-area-item' v-model="curProvinceCode" :placeholder="placeholders[0]||'请选择'" :size="size" :disabled="disabled">
+    <el-select class='select-area-item' v-model="curProvinceCode" :placeholder="placeholders[0]" :size="size" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in provinces" :key="key"></el-option>
     </el-select>
 
-    <el-select class='select-area-item' v-model="curCityCode" :placeholder="placeholders[1] ||'请选择'" :size="size" v-if="level>=1" :disabled="disabled">
+    <el-select class='select-area-item' v-model="curCityCode" :placeholder="placeholders[1]" :size="size" v-if="level>=1" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in citys" :key="key"></el-option>
     </el-select>
 
-    <el-select class='select-area-item' v-model="curCountyCode" :placeholder="placeholders[2]||'请选择'" :size="size" v-if="level>=2" :disabled="disabled">
+    <el-select class='select-area-item' v-model="curCountyCode" :placeholder="placeholders[2]" :size="size" v-if="level>=2" :disabled="disabled">
       <el-option :label="val" :value="key" v-for="(val, key) in countys" :key="key"></el-option>
     </el-select>
   </div>
@@ -18,6 +18,7 @@
 import find from 'lodash.find'
 import arealist from './arealist'
 
+// 台湾省地区编码
 const TAIWAN_CODE = '710000'
 
 function assert(condition, msg = '') {
@@ -55,7 +56,7 @@ export default {
      */
     placeholders: {
       type: Array,
-      default: () => []
+      default: () => ['请选择', '请选择', '请选择']
     },
 
     /**
@@ -63,7 +64,7 @@ export default {
      */
     level: {
       type: Number,
-      default: 1, // 0-->一联 1->二联 2->三联
+      default: 2, // 0-->一联 1->二联 2->三联
       validator: val => [0, 1, 2].indexOf(val) > -1
     },
 
@@ -293,7 +294,6 @@ export default {
           texts = [this.curProvince]
           break
         case 1:
-          // fix #32 710000是台湾省
           texts = [
             this.curProvince,
             this.curProvinceCode === TAIWAN_CODE

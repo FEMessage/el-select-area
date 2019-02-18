@@ -5041,6 +5041,7 @@ var arealist = {
   }
 })();
 
+// 台湾省地区编码
 var TAIWAN_CODE = '710000';
 
 function assert(condition) {
@@ -5056,15 +5057,15 @@ function isArray(param) {
 }
 
 var Component = { render: function render() {
-    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { staticClass: "el-select-area" }, [_c('el-select', { staticClass: "select-area-item", attrs: { "placeholder": _vm.placeholders[0] || '请选择', "size": _vm.size, "disabled": _vm.disabled }, model: { value: _vm.curProvinceCode, callback: function callback($$v) {
+    var _vm = this;var _h = _vm.$createElement;var _c = _vm._self._c || _h;return _c('div', { staticClass: "el-select-area" }, [_c('el-select', { staticClass: "select-area-item", attrs: { "placeholder": _vm.placeholders[0], "size": _vm.size, "disabled": _vm.disabled }, model: { value: _vm.curProvinceCode, callback: function callback($$v) {
           _vm.curProvinceCode = $$v;
         }, expression: "curProvinceCode" } }, _vm._l(_vm.provinces, function (val, key) {
       return _c('el-option', { key: key, attrs: { "label": val, "value": key } });
-    }), 1), _vm._v(" "), _vm.level >= 1 ? _c('el-select', { staticClass: "select-area-item", attrs: { "placeholder": _vm.placeholders[1] || '请选择', "size": _vm.size, "disabled": _vm.disabled }, model: { value: _vm.curCityCode, callback: function callback($$v) {
+    }), 1), _vm._v(" "), _vm.level >= 1 ? _c('el-select', { staticClass: "select-area-item", attrs: { "placeholder": _vm.placeholders[1], "size": _vm.size, "disabled": _vm.disabled }, model: { value: _vm.curCityCode, callback: function callback($$v) {
           _vm.curCityCode = $$v;
         }, expression: "curCityCode" } }, _vm._l(_vm.citys, function (val, key) {
       return _c('el-option', { key: key, attrs: { "label": val, "value": key } });
-    }), 1) : _vm._e(), _vm._v(" "), _vm.level >= 2 ? _c('el-select', { staticClass: "select-area-item", attrs: { "placeholder": _vm.placeholders[2] || '请选择', "size": _vm.size, "disabled": _vm.disabled }, model: { value: _vm.curCountyCode, callback: function callback($$v) {
+    }), 1) : _vm._e(), _vm._v(" "), _vm.level >= 2 ? _c('el-select', { staticClass: "select-area-item", attrs: { "placeholder": _vm.placeholders[2], "size": _vm.size, "disabled": _vm.disabled }, model: { value: _vm.curCountyCode, callback: function callback($$v) {
           _vm.curCountyCode = $$v;
         }, expression: "curCountyCode" } }, _vm._l(_vm.countys, function (val, key) {
       return _c('el-option', { key: key, attrs: { "label": val, "value": key } });
@@ -5097,7 +5098,7 @@ var Component = { render: function render() {
     placeholders: {
       type: Array,
       default: function _default() {
-        return [];
+        return ['请选择', '请选择', '请选择'];
       }
     },
 
@@ -5106,7 +5107,7 @@ var Component = { render: function render() {
      */
     level: {
       type: Number,
-      default: 1, // 0-->一联 1->二联 2->三联
+      default: 2, // 0-->一联 1->二联 2->三联
       validator: function validator(val) {
         return [0, 1, 2].indexOf(val) > -1;
       }
@@ -5310,7 +5311,6 @@ var Component = { render: function render() {
           texts = [this.curProvince];
           break;
         case 1:
-          // fix #32 710000是台湾省
           texts = [this.curProvince, this.curProvinceCode === TAIWAN_CODE ? this.curProvince : this.curCity];
           break;
         case 2:
