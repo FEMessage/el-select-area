@@ -18,6 +18,7 @@
 import find from 'lodash.find'
 import arealist from './arealist'
 
+// 台湾省地区编码
 const TAIWAN_CODE = '710000'
 
 function assert(condition, msg = '') {
@@ -293,7 +294,6 @@ export default {
           texts = [this.curProvince]
           break
         case 1:
-          // fix #32 710000是台湾省
           texts = [
             this.curProvince,
             this.curProvinceCode === TAIWAN_CODE
