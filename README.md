@@ -89,15 +89,15 @@ export default {
 
 ## Props
 
-| 参数         | 说明                                                              | 类型    | 默认值 |
-| ------------ | ----------------------------------------------------------------- | ------- | ------ |
-| value        | 范围输入框绑定的值                                                | Array   | [ ]    |
-| type         | 返回值类型 text->文本，code-> 行政代码，all->对象类型，两者都返回 | String  | code   |
-| placeholders | 占位符数组                                                        | Array   | [ ]    |
-| level        | 级联数，可选 0，1，2                                              | Number  | 2      |
-| size         | select 框大小，同 el-select                                       | String  | medium |
-| disabled     | 是否禁用                                                          | Boolean | false  |
-| data         | 省市区区域数据                                                    | Object  |        |
+| 参数         | 说明                                                              | 类型    | 默认值                                                                                              |
+| ------------ | ----------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------- |
+| value        | 范围输入框绑定的值                                                | Array   | [ ]                                                                                                 |
+| type         | 返回值类型 text->文本，code-> 行政代码，all->对象类型，两者都返回 | String  | code                                                                                                |
+| placeholders | 占位符数组                                                        | Array   | [ ]                                                                                                 |
+| level        | 级联数，可选 0，1，2                                              | Number  | 2                                                                                                   |
+| size         | select 框大小，同 el-select                                       | String  | medium                                                                                              |
+| disabled     | 是否禁用                                                          | Boolean | false                                                                                               |
+| data         | 省市区区域数据                                                    | Object  | <a href="https://github.com/FEMessage/el-select-area/blob/dev/src/arealist.js">查看详细区域数据</a> |
 
 ## License
 
