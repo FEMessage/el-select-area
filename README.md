@@ -18,7 +18,9 @@
 
 ## Introduction
 
-地区选择三级联动组件，适用于需要进行地区选择的场景，组件内置了全国的区域信息，且用户可以自定义区域的数据信息。此外，为了保持级别的一致，对于直辖市，台湾省这种只有 2 层级别的，会将省和市统一为直辖市名称，以保持 3 层级别的展示。
+地区选择三级联动组件，适用于需要进行地区选择的场景，组件内置了全国的区域信息，且用户可以自定义区域的数据信息。
+
+此外，为了保持级别的一致，对于直辖市，台湾省这种只有 2 层级别的，会将省和市统一为直辖市名称，以保持 3 层级别的展示。
 
 [⬆ Back to Top](#table-of-contents)
 
@@ -52,7 +54,7 @@ yarn add @femessage/el-select-area
 
 // Step2 在需要的.vue 文件中
 <template>
-    <el-select-area type="text" v-model="area" :level="2"></el-select-area>
+    <el-select-area v-model="area"></el-select-area>
 </template>
 
 <script>
