@@ -1,5 +1,10 @@
 # el-select-area
 
+[![NPM Download](https://img.shields.io/npm/dm/@femessage/el-select-area.svg)](https://www.npmjs.com/package/@femessage/el-select-area)
+[![NPM Version](https://img.shields.io/npm/v/@femessage/el-select-area.svg)](https://www.npmjs.com/package/@femessage/el-select-area)
+[![NPM License](https://img.shields.io/npm/l/@femessage/el-select-area.svg)](https://github.com/FEMessage/el-select-area/blob/master/LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-select-area/pulls)
+
 ![introduce](http://thyrsi.com/t6/670/1550217570x2890174243.gif)
 
 ## Table of Contents
