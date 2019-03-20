@@ -5,7 +5,7 @@
 [![NPM License](https://img.shields.io/npm/l/@femessage/el-select-area.svg)](https://github.com/FEMessage/el-select-area/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-select-area/pulls)
 
-![introduce](http://thyrsi.com/t6/670/1550217570x2890174243.gif)
+![introduce](https://i.screenshot.net/8dv1lto)
 
 ## Table of Contents
 
@@ -84,11 +84,11 @@ export default {
 
 #### 设置级联数
 
-![level](http://thyrsi.com/t6/670/1550217603x2890174243.gif)
+![level](https://i.screenshot.net/py2nra3)
 
 #### 设置返回值类型
 
-![res](http://thyrsi.com/t6/670/1550217628x2890174243.gif)
+![res](https://i.screenshot.net/pdy12uz)
 
 [⬆ Back to Top](#table-of-contents)
 
