@@ -1,34 +1,43 @@
 <template>
   <div class="el-select-area">
-    <el-select class='select-area-item' v-model="curProvinceCode" :placeholder="placeholders[0]" :size="size" :disabled="disabled">
-      <el-option :label="val" :value="key" v-for="(val, key) in provinces" :key="key"></el-option>
-    </el-select>
-
-    <el-select class='select-area-item' v-model="curCityCode" :placeholder="placeholders[1]" :size="size" v-if="level>=1" :disabled="disabled">
-      <el-option :label="val" :value="key" v-for="(val, key) in citys" :key="key"></el-option>
-    </el-select>
-
-    <el-select class='select-area-item' v-model="curCountyCode" :placeholder="placeholders[2]" :size="size" v-if="level>=2" :disabled="disabled">
-      <el-option :label="val" :value="key" v-for="(val, key) in countys" :key="key"></el-option>
+    <el-select
+      class='select-area-item'
+      v-model="indexs[index]"
+      :placeholder="placeholders[index]"
+      :size="size"
+      :disabled="disabled"
+      v-for="(item, index) in displayColumns"
+      :key="index"
+      @change="handleOptionChange($event, values[index].type)"
+    >
+      <el-option
+        :label="val.name"
+        :value="key"
+        v-for="(val, key) in item"
+        :key="key"
+      ></el-option>
     </el-select>
   </div>
 </template>
 
 <script>
-import find from 'lodash.find'
-import arealist from './arealist'
+import arealist from './arealist.js'
+import memoize from 'lodash.memoize'
 
-// 台湾省地区编码
-const TAIWAN_CODE = '710000'
-
-function assert(condition, msg = '') {
-  if (!condition) {
-    console.error(`[select-area]: ${msg}`)
-  }
+function isCode(value = '') {
+  return /^\d{6,}$/.test(value)
 }
 
-function isArray(param) {
-  return Object.prototype.toString.call(param) === '[object Array]'
+function isBelongToProvince(code1 = '', code2 = '') {
+  return (
+    isCode(code1) && isCode(code2) && code1.slice(0, 2) === code2.slice(0, 2)
+  )
+}
+
+function isBelongToCity(code1 = '', code2 = '') {
+  return (
+    isCode(code1) && isCode(code2) && code1.slice(0, 4) === code2.slice(0, 4)
+  )
 }
 
 export default {
@@ -97,338 +106,226 @@ export default {
 
   data() {
     return {
-      // 区域数据
-      provinces: this.data['provinceList'],
-      citys: {},
-      countys: {},
+      // 当前选中的值
+      values: [
+        {code: '', name: '', type: 'province'},
+        {code: '', name: '', type: 'city'},
+        {code: '', name: '', type: 'county'}
+      ],
 
-      curProvince: '', // text
-      curProvinceCode: '', // code
-      curCity: '',
-      curCityCode: '',
-      curCounty: '',
-      curCountyCode: '',
+      // 当前选中的索引
+      indexs: ['', '', ''],
 
-      // 设置默认值的判断
-      defaults: [],
-      isCode: false,
-      isSetDefault: false
+      // 当前展示的列表
+      columns: [{}, {}, {}],
+
+      // 生成一些函数
+      setProvince: this.setArea('province'),
+      setCity: this.setArea('city'),
+      setCounty: this.setArea('county'),
+
+      // 缓存 getList 和 getIndex 的结果
+      getList: memoize(
+        this.getAreaList,
+        (...arg) => (arg[1] ? arg[1] : arg[0])
+      ),
+      getIndex: memoize(this.getAreaIndex, (...arg) => arg[1])
     }
   },
 
-  watch: {
-    curProvinceCode(val, oldVal) {
-      this.curProvince = this.provinces[val]
-      this.provinceChange(val)
+  computed: {
+    // 区域数据
+    province() {
+      return this.data['province_list'] || {}
     },
 
-    curCityCode(val, oldVal) {
-      this.curCity = this.citys[val]
-      this.cityChange(val)
+    city() {
+      return this.data['city_list'] || {}
     },
 
-    curCountyCode(val, oldVal) {
-      this.curCounty = this.countys[val]
-      this.areaChange(val)
+    county() {
+      return this.data['county_list'] || {}
     },
 
-    value(val) {
-      if (isArray(val) && !val.length) {
-        this.curProvinceCode = ''
-        this.curCityCode = ''
-        this.curCountyCode = ''
-        this.$nextTick(() => {
-          this.citys = {}
-          this.countys = {}
-        })
-      }
-
-      if (!this.isSetDefault && isArray(val) && val.length === this.level + 1) {
-        this.beforeSetDefault()
-        this.setDefaultValue()
-      }
-
-      if (
-        !this.isSetDefault &&
-        isArray(val) &&
-        val.length &&
-        val.length !== this.level + 1
-      ) {
-        assert(false, `设置的默认值和 level 值不匹配`)
-      }
+    displayColumns() {
+      return this.columns.slice(0, +this.level + 1)
     }
   },
 
   methods: {
-    provinceChange(val) {
-      if (this.level === 0) {
-        this.selectChange()
-      } else if (this.level >= 1) {
-        this.citys = this.data.cityList[val]
-        if (!this.citys) {
-          this.citys = {
-            [this.curProvinceCode]: this.curProvince
-          }
-          this.curCity = this.curProvince
-          this.curCityCode = this.curCityCode
-          return
-        }
-
-        let curCity = Object.values(this.citys)[0]
-        let curCityCode = Object.keys(this.citys)[0]
-
-        if (this.defaults[1]) {
-          if (this.isCode) {
-            curCityCode = find(
-              Object.keys(this.citys),
-              item => item === this.defaults[1]
-            )
-            assert(
-              curCityCode,
-              `城市 ${this.defaults[1]} 不存在于省份 ${this.defaults[0]} 中`
-            )
-            curCity = this.citys[curCityCode]
-          } else {
-            curCity = find(this.citys, item => item === this.defaults[1])
-            assert(
-              curCity,
-              `城市 ${this.defaults[1]} 不存在于省份 ${this.defaults[0]} 中`
-            )
-            curCityCode = find(
-              Object.keys(this.citys),
-              item => this.citys[item] === this.defaults[1]
-            )
-          }
-        }
-
-        this.curCity = curCity
-        this.curCityCode = curCityCode
+    // 兼容旧的输出
+    outPut() {
+      let result
+      if (this.type === 'all') {
+        result = this.values.map(item => {
+          const obj = {}
+          obj[item.code] = item.name
+          return obj
+        })
       }
-    },
-
-    cityChange(val) {
-      if (this.level === 1) {
-        this.selectChange()
-      } else if (this.level === 2) {
-        this.countys = this.data.countyList[val]
-        if (!this.countys) {
-          this.countys = {
-            [this.curCityCode]: this.curCity
-          }
-          this.curCounty = this.curCity
-          this.curCountyCode = this.curCityCode
-          return
-        }
-
-        let curCounty = Object.values(this.countys)[0]
-        let curCountyCode = Object.keys(this.countys)[0]
-
-        if (this.defaults[2]) {
-          if (this.isCode) {
-            curCountyCode = find(
-              Object.keys(this.countys),
-              item => item === this.defaults[2]
-            )
-            assert(
-              curCountyCode,
-              `县区 ${this.defaults[2]} 不存在于城市 ${this.defaults[1]} 中`
-            )
-            curCounty = this.countys[curCountyCode]
-          } else {
-            curCounty = find(this.countys, item => item === this.defaults[2])
-            assert(
-              curCounty,
-              `县区 ${this.defaults[2]} 不存在于城市 ${this.defaults[1]} 中`
-            )
-            curCountyCode = find(
-              Object.keys(this.countys),
-              item => this.countys[item] === this.defaults[2]
-            )
-          }
-        }
-
-        this.curCounty = curCounty
-        this.curCountyCode = curCountyCode
-      }
-    },
-
-    areaChange(val) {
-      this.curCountyCode = val
-      this.selectChange()
-    },
-
-    getAreaCode() {
-      let codes = []
-
-      switch (this.level) {
-        case 0:
-          codes = [this.curProvinceCode]
-          break
-        case 1:
-          codes = [
-            this.curProvinceCode,
-            this.curProvinceCode === TAIWAN_CODE
-              ? this.curProvinceCode
-              : this.curCityCode
-          ]
-          break
-        case 2:
-          codes = [
-            this.curProvinceCode,
-            this.curProvinceCode === TAIWAN_CODE
-              ? this.curProvinceCode
-              : this.curCityCode,
-            this.curCountyCode
-          ]
-          break
-      }
-
-      return codes
-    },
-
-    getAreaText() {
-      let texts = []
-
-      switch (this.level) {
-        case 0:
-          texts = [this.curProvince]
-          break
-        case 1:
-          texts = [
-            this.curProvince,
-            this.curProvinceCode === TAIWAN_CODE
-              ? this.curProvince
-              : this.curCity
-          ]
-          break
-        case 2:
-          texts = [
-            this.curProvince,
-            this.curProvinceCode === TAIWAN_CODE
-              ? this.curProvince
-              : this.curCity,
-            this.curCounty
-          ]
-          break
-      }
-
-      return texts
-    },
-
-    getAreaCodeAndText(selected) {
-      let textCodes = []
-
-      switch (this.level) {
-        case 0:
-          textCodes = [{[this.curProvinceCode]: this.curProvince}]
-          break
-        case 1:
-          textCodes = [
-            {[this.curProvinceCode]: this.curProvince},
-            {[this.curCityCode]: this.curCity}
-          ]
-          break
-        case 2:
-          const cityCode =
-            this.curProvinceCode === TAIWAN_CODE
-              ? this.curProvinceCode
-              : this.curCityCode
-          const cityText =
-            this.curProvinceCode === TAIWAN_CODE
-              ? this.curProvince
-              : this.curCity
-          textCodes = [
-            {[this.curProvinceCode]: this.curProvince},
-            {[cityCode]: cityText},
-            {[this.curCountyCode]: this.curCounty}
-          ]
-          break
-      }
-
-      return textCodes
-    },
-
-    beforeSetDefault() {
-      const chinese = /^[\u4E00-\u9FA5\uF900-\uFA2D]{2,}$/
-      const num = /^\d{6,}$/
-      const isCode = num.test(this.value[0])
-      let isValid
-
-      if (!isCode) {
-        isValid = this.value.every(item => chinese.test(item))
-      } else {
-        isValid = this.value.every(item => num.test(item))
-      }
-
-      assert(isValid, '传入的默认值参数有误')
-      // 映射默认值，避免直接更改props
-      this.defaults = [].concat(this.value)
-      this.isCode = isCode
-      this.isSetDefault = true
-    },
-
-    setDefaultValue() {
-      let provinceCode = ''
-
-      if (this.isCode) {
-        provinceCode = this.defaults[0]
-      } else {
-        const province = find(this.provinces, item => item === this.defaults[0])
-        assert(province, `省份 ${this.defaults[0]} 不存在`)
-        provinceCode = find(
-          Object.keys(this.provinces),
-          item => this.provinces[item] === this.defaults[0]
-        )
-      }
-      this.curProvinceCode = provinceCode
-      // 还原默认值，避免用户选择出错
-      this.$nextTick(() => {
-        this.defaults = []
-        // this.isCode = false;
-        // this.isSetDefault = false;
-      })
-    },
-
-    selectChange() {
-      this.isSetDefault = true
-      let res = []
 
       if (this.type === 'code') {
-        res = this.getAreaCode()
-      } else if (this.type === 'text') {
-        res = this.getAreaText()
-      } else if (this.type === 'all') {
-        res = this.getAreaCodeAndText()
+        result = this.values.map(item => item.code)
       }
-      /**
-       * 选择地区之后触发
-       * @return 获取改变后地区数据
-       * @event input
-       */
-      this.$emit('input', res)
 
-      /**
-       * 选择地区之后触发
-       * @return 获取改变后地区数据
-       * @event change
-       */
-      this.$emit('change', res)
+      if (this.type === 'text') {
+        result = this.values.map(item => item.name)
+      }
+
+      result = result.slice(0, +this.level + 1)
+
+      this.$emit('input', result)
+      this.$emit('change', result)
+    },
+
+    /**
+     * @returns {function}
+     * 返回一个设置某个级别的位置的function
+     */
+    setArea(type) {
+      let columnNum = type === 'province' ? 0 : type === 'city' ? 1 : 2
+      return (item = {}, index = null) => {
+        let {code, name = ''} = item
+        if (!code) return
+        // 传入默认code事补全中文
+        if (!name) {
+          name = this[type][code]
+        }
+        this.$set(this.values, columnNum, {code, name, type})
+        if (index !== null) {
+          this.$set(this.indexs, columnNum, index)
+        }
+      }
+    },
+
+    provinceChange(item, index) {
+      const {code, name} = item
+      this.setProvince(item)
+      if (this.level >= 1) {
+        let city = this.getList('city', code.slice(0, 2))
+        this.setList('city', code)
+        this.cityChange(city[0], 0)
+      }
+    },
+
+    cityChange(item, index) {
+      const {code, name} = item
+      this.setCity(item, index)
+      if (this.level >= 2) {
+        let county = this.getList('county', code.slice(0, 4))
+        this.setList('county', code)
+        this.countyChange(county[0], 0)
+      }
+    },
+
+    countyChange(item, index) {
+      const {code, name} = item
+      this.setCounty(item, index)
+    },
+
+    handleOptionChange(index, type) {
+      let [province, city, county] = this.displayColumns
+      if (type === 'province') {
+        this.provinceChange(province[index], index)
+      }
+
+      if (type === 'city') {
+        this.cityChange(city[index], index)
+      }
+
+      if (type === 'county') {
+        this.countyChange(county[index], index)
+      }
+
+      // 暴露事件
+      this.outPut()
+    },
+    /**
+     * get list by code
+     * @param type {String} 区域类别
+     * @param code {String | Number} 区域编码
+     * @returns {Array}
+     */
+    getAreaList(type, code) {
+      let result = []
+
+      // 最高级行政区域可以不需要传入code
+      if (type !== 'province' && !code) {
+        return result
+      }
+
+      const list = this[type]
+      result = Object.keys(list).map(listCode => ({
+        code: listCode,
+        name: list[listCode]
+      }))
+      if (code) {
+        result = result.filter(item => item.code.indexOf(code) === 0)
+      }
+
+      return result
+    },
+
+    // get index by code
+    getAreaIndex(type, code) {
+      let compareNum = type === 'province' ? 2 : type === 'city' ? 4 : 6
+      const list = this.getList(type, code.slice(0, compareNum - 2))
+
+      code = code.slice(0, compareNum)
+      for (let i = 0; i < list.length; i++) {
+        if (list[i].code.slice(0, compareNum) === code) {
+          return i
+        }
+      }
+
+      return -1
+    },
+
+    setList(type, code = '') {
+      let compareNum = type === 'province' ? 2 : type === 'city' ? 4 : 6
+      const list = this.getList(type, code.slice(0, compareNum - 2))
+      this.$set(this.columns, compareNum / 2 - 1, list)
+    },
+
+    setValues() {
+      // 默认省级区域
+      this.setList('province')
+
+      // 设置传入的选中值
+      const [provinceCode, cityCode, countyCode] = this.value
+
+      const provinceIndex = provinceCode
+        ? this.getIndex('province', provinceCode)
+        : -1
+      const cityIndex = cityCode ? this.getIndex('city', cityCode) : -1
+      const countyIndex = countyCode ? this.getIndex('county', countyCode) : -1
+
+      if (isCode(provinceCode) && provinceIndex > -1) {
+        this.setProvince({code: provinceCode}, provinceIndex)
+        this.setList('city', provinceCode)
+      }
+
+      if (
+        isBelongToProvince(provinceCode, cityCode) &&
+        this.level >= 1 &&
+        cityIndex > -1
+      ) {
+        this.setCity({code: cityCode}, cityIndex)
+        this.setList('county', cityCode)
+      }
+
+      if (
+        isBelongToCity(countyCode, cityCode) &&
+        this.level >= 2 &&
+        countyIndex > -1
+      ) {
+        this.setCounty({code: countyCode}, countyIndex)
+      }
     }
   },
 
   created() {
-    if (isArray(this.value) && this.value.length === this.level + 1) {
-      this.beforeSetDefault()
-      this.setDefaultValue()
-    }
-
-    if (
-      isArray(this.value) &&
-      this.value.length &&
-      this.value.length !== this.level + 1
-    ) {
-      assert(false, `设置的默认值和 level 值不匹配`)
-    }
+    this.setValues()
   }
 }
 </script>

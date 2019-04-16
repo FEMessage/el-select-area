@@ -38,30 +38,30 @@
     "vue": "^2.5.16"
   },
   "dependencies": {
-    "lodash.find": "^4.6.0"
+    "lodash.memoize": "^4.1.2"
   },
   "devDependencies": {
-    "minimist": "^1.2.0",
-    "rollup": "^0.57.1",
-    "rollup-plugin-babel": "^3.0.7",
-    "rollup-plugin-uglify-es": "0.0.1",
-    "rollup-plugin-vue": "^3.0.0",
-    "vue": "^2.5.16",
-    "vue-template-compiler": "^2.5.16",
-    "husky": "^0.14.3",
-    "prettier": "1.12.1",
-    "pretty-quick": "^1.4.1",
+    "@storybook/vue": "^3.4.10",
     "@vue/test-utils": "^1.0.0-beta.16",
     "babel-jest": "^23.0.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
+    "husky": "^0.14.3",
     "jest": "^23.1.0",
-    "vue-jest": "^2.6.0",
-    "vue-styleguidist": "1.7.7",
-    "webpack": "^3.10.0",
+    "minimist": "^1.2.0",
+    "prettier": "1.12.1",
+    "pretty-quick": "^1.4.1",
+    "rollup": "^0.57.1",
+    "rollup-plugin-babel": "^3.0.7",
+    "rollup-plugin-uglify-es": "0.0.1",
+    "rollup-plugin-vue": "^3.0.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "@storybook/vue": "^3.4.10"
+    "vue": "^2.5.16",
+    "vue-jest": "^2.6.0",
+    "vue-styleguidist": "1.7.7",
+    "vue-template-compiler": "^2.5.16",
+    "webpack": "^3.10.0"
   },
   "files": ["src", "dist", "yarn.lock"],
   "jest": {
