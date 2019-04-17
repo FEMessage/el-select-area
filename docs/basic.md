@@ -1,3 +1,4 @@
+```
 <template>
   <div>
     <p>基础用法</p>
@@ -15,6 +16,4 @@ export default {
   }
 }
 </script>
-
-<style>
-</style>
+```

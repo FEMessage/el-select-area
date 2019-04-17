@@ -41,10 +41,11 @@ function isBelongToCity(code1 = '', code2 = '') {
 }
 
 export default {
-  name: 'ElAreaSelect',
+  name: 'ElSelectArea',
   props: {
     /**
      * 地区选中值，数组，必填，没有选中值，传[]
+     * @model
      */
     value: {
       type: Array,
@@ -61,7 +62,7 @@ export default {
     },
 
     /**
-     * select框的placeholder，数据，默认为[]
+     * select框的placeholder
      */
     placeholders: {
       type: Array,
@@ -70,6 +71,7 @@ export default {
 
     /**
      * 级联数，默认为二级级联，最多为三级级联，最小为一级
+     * 可选值 `0, 1, 2`
      */
     level: {
       type: Number,
@@ -96,7 +98,7 @@ export default {
     /**
      * 数据源，可不填，默认数据格式参考见：`https://github.com/dwqs/area-data`
      * 经过项目检验，将area-data中的直辖市的数据进行修改，将市辖区修改成相应的直辖市名称并修改成直辖市的code
-     * 且将省市区进行分类，分别对应provinceList、cityList、countyList
+     * 且将省市区进行分类，分别对应province_list、city_list、county_list
      */
     data: {
       type: Object,
@@ -174,7 +176,20 @@ export default {
 
       result = result.slice(0, +this.level + 1)
 
+      /**
+       * input 事件仅为了绑定v-model, 不了解v-model机制请勿随意调用
+       * @event input
+       * @type {array}
+       * @model
+       */
       this.$emit('input', result)
+
+      /**
+       * 当前选中值改变时触发的事件，返回结果根据属性 type 的定义返回响应的数组结果
+       *
+       * @event change
+       * @type {array}
+       */
       this.$emit('change', result)
     },
 
