@@ -16,7 +16,7 @@ module.exports = {
   },
   sections: [
     {
-      name: 'Components',
+      name: 'ElSelectArea',
       components: 'src/*.vue',
       usageMode: 'expand'
     },
