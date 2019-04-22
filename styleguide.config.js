@@ -12,7 +12,7 @@ module.exports = {
   styleguideDir: 'docs',
   pagePerSection: true,
   ribbon: {
-    url: 'https://github.com/FEMessage/component'
+    url: 'https://github.com/FEMessage/el-select-area'
   },
   sections: [
     {
@@ -26,7 +26,7 @@ module.exports = {
       sections: demoSections
     }
   ],
-  require: [path.join(__dirname, './plugins/global.js')],
+  require: ['./styleguide/element.js'],
   webpackConfig: {
     module: {
       rules: [

@@ -29,17 +29,13 @@
     "build:unpkg":
       "rollup --config build/rollup.config.js --format iife --file dist/el-select-area.min.js",
     "prepublishOnly": "npm run build",
-    "precommit": "pretty-quick --staged",
-    "postpublish": "git add docs && git add dist && git commit -a --amend"
-  },
-  "peerDependencies": {
-    "element-ui": "^2.7.2",
-    "vue": "^2.5.16"
+    "precommit": "pretty-quick --staged"
   },
   "dependencies": {
     "lodash.memoize": "^4.1.2"
   },
   "devDependencies": {
+    "element-ui": "^2.7.2",
     "@babel/core": "^7.4.3",
     "@babel/plugin-transform-runtime": "^7.4.3",
     "@babel/preset-env": "^7.4.3",
@@ -60,7 +56,7 @@
     "rollup-plugin-vue": "^4.7.2",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
-    "vue": "^2.5.16",
+    "vue": "^2.6.10",
     "vue-jest": "^3.0.4",
     "vue-loader": "^15.7.0",
     "vue-styleguidist": "^3.11.4",
