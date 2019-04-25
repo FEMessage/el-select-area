@@ -148,7 +148,7 @@ export default {
     county() {
       return this.data['county_list'] || {}
     },
-
+    // 根据 level 的值返回展示的联级数量
     displayColumns() {
       return this.columns.slice(0, +this.level + 1)
     }
@@ -156,7 +156,7 @@ export default {
 
   methods: {
     // 兼容旧的输出
-    outPut() {
+    emitEvent() {
       let result
       if (this.type === 'all') {
         result = this.values.map(item => {
@@ -185,7 +185,7 @@ export default {
       this.$emit('input', result)
 
       /**
-       * 当前选中值改变时触发的事件，返回结果根据属性 type 的定义返回响应的数组结果
+       * 当前选中值改变时触发的事件，返回结果根据属性 type 的定义返回相应的数组结果
        *
        * @event change
        * @type {array}
@@ -194,6 +194,7 @@ export default {
     },
 
     /**
+     * 当选中options时，设置当前选中值
      * @returns {function}
      * 返回一个设置某个级别的位置的function
      */
@@ -238,6 +239,7 @@ export default {
       this.setCounty(item, index)
     },
 
+    // event onchange 触发三个options联动
     handleOptionChange(index, type) {
       let [province, city, county] = this.displayColumns
       if (type === 'province') {
@@ -253,7 +255,7 @@ export default {
       }
 
       // 暴露事件
-      this.outPut()
+      this.emitEvent()
     },
     /**
      * get list by code
@@ -296,12 +298,14 @@ export default {
       return -1
     },
 
+    // 设置对应的下级列表
     setList(type, code = '') {
       let compareNum = type === 'province' ? 2 : type === 'city' ? 4 : 6
       const list = this.getList(type, code.slice(0, compareNum - 2))
       this.$set(this.columns, compareNum / 2 - 1, list)
     },
 
+    // 组件初始化时，设置默认值
     setValues() {
       // 默认省级区域
       this.setList('province')

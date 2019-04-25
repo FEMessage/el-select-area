@@ -3,10 +3,17 @@ const path = require('path')
 const glob = require('glob')
 
 const demos = glob.sync('docs/!(basic).md')
-const demoSections = demos.map(filePath => ({
-  name: path.basename(filePath, '.md'),
-  content: filePath
-}))
+const demoSections = [
+  {
+    name: 'basic',
+    content: 'docs/basic.md'
+  }
+].concat(
+  demos.map(filePath => ({
+    name: path.basename(filePath, '.md'),
+    content: filePath
+  }))
+)
 
 module.exports = {
   styleguideDir: 'docs',
@@ -16,13 +23,12 @@ module.exports = {
   },
   sections: [
     {
-      name: 'ElSelectArea',
+      name: 'Components',
       components: 'src/*.vue',
       usageMode: 'expand'
     },
     {
       name: 'Demo',
-      content: 'docs/basic.md',
       sections: demoSections
     }
   ],
