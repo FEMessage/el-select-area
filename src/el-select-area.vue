@@ -155,14 +155,35 @@ export default {
   },
 
   watch: {
-    value(val) {
-      if (val.every(item => isCode(item) || !item)) {
-        this.setValues()
+    value(val, oldVal) {
+      if (
+        !(
+          this.valueFormatter(val).toString() ==
+          this.valueFormatter(oldVal).toString()
+        )
+      ) {
+        if (val.every(item => isCode(item))) {
+          this.setValues()
+          this.emitEvent()
+        }
       }
     }
   },
 
   methods: {
+    valueFormatter(value) {
+      if (value.every(item => item)) {
+        return value.map(item => {
+          if (isCode(item) || typeof item === 'string') {
+            return item
+          } else {
+            return Object.keys(item).pop()
+          }
+        })
+      } else {
+        return []
+      }
+    },
     reset(type) {
       let columnNum = type === 'province' ? 0 : type === 'city' ? 1 : 2
       this.$set(this.values, columnNum, {code: '', name: '', type: type})
@@ -171,10 +192,11 @@ export default {
     // 兼容旧的输出
     emitEvent() {
       let result
+
       if (this.type === 'all') {
         result = this.values.map(item => {
           const obj = {}
-          obj[item.code] = item.name
+          item.code && (obj[item.code] = item.name)
           return obj
         })
       }
@@ -254,7 +276,6 @@ export default {
 
     // event onchange 触发三个options联动
     handleOptionChange(index, type) {
-      console.log('value change')
       let [province, city, county] = this.displayColumns
       if (type === 'province') {
         this.provinceChange(province[index], index)
@@ -325,7 +346,8 @@ export default {
       this.setList('province')
 
       // 设置传入的选中值
-      const [provinceCode, cityCode, countyCode] = this.value
+      const [provinceCode, cityCode, countyCode] =
+        this.valueFormatter(this.value) || []
 
       const provinceIndex = provinceCode
         ? this.getIndex('province', provinceCode)
@@ -365,11 +387,6 @@ export default {
 
   created() {
     this.setValues()
-  },
-
-  updated() {
-    // this.setValues()
-    console.log('value updated')
   }
 }
 </script>
