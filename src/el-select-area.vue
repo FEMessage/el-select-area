@@ -154,7 +154,20 @@ export default {
     }
   },
 
+  watch: {
+    value(val) {
+      if (val.every(item => isCode(item) || !item)) {
+        this.setValues()
+      }
+    }
+  },
+
   methods: {
+    reset(type) {
+      let columnNum = type === 'province' ? 0 : type === 'city' ? 1 : 2
+      this.$set(this.values, columnNum, {code: '', name: '', type: type})
+      this.$set(this.indexs, columnNum, '')
+    },
     // 兼容旧的输出
     emitEvent() {
       let result
@@ -203,7 +216,7 @@ export default {
       return (item = {}, index = null) => {
         let {code, name = ''} = item
         if (!code) return
-        // 传入默认code事补全中文
+        // 传入默认code时补全中文
         if (!name) {
           name = this[type][code]
         }
@@ -241,6 +254,7 @@ export default {
 
     // event onchange 触发三个options联动
     handleOptionChange(index, type) {
+      console.log('value change')
       let [province, city, county] = this.displayColumns
       if (type === 'province') {
         this.provinceChange(province[index], index)
@@ -322,6 +336,8 @@ export default {
       if (isCode(provinceCode) && provinceIndex > -1) {
         this.setProvince({code: provinceCode}, provinceIndex)
         this.setList('city', provinceCode)
+      } else {
+        this.reset('province')
       }
 
       if (
@@ -331,6 +347,8 @@ export default {
       ) {
         this.setCity({code: cityCode}, cityIndex)
         this.setList('county', cityCode)
+      } else {
+        this.reset('city')
       }
 
       if (
@@ -339,12 +357,19 @@ export default {
         countyIndex > -1
       ) {
         this.setCounty({code: countyCode}, countyIndex)
+      } else {
+        this.reset('county')
       }
     }
   },
 
   created() {
     this.setValues()
+  },
+
+  updated() {
+    // this.setValues()
+    console.log('value updated')
   }
 }
 </script>
