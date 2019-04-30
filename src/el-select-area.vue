@@ -27,15 +27,18 @@ import memoize from 'lodash.memoize'
 const AREA = {
   province: {
     index: 0,
-    name: 'province'
+    name: 'province',
+    codeLen: 2
   },
   city: {
     index: 1,
-    name: 'city'
+    name: 'city',
+    codeLen: 4
   },
   county: {
     index: 2,
-    name: 'county'
+    name: 'county',
+    codeLen: 6
   }
 }
 
@@ -336,7 +339,7 @@ export default {
 
     // get index by code
     getAreaIndex(type, code) {
-      let compareNum = (AREA[type].index + 1) * 2
+      let compareNum = AREA[type].codeLen
       const list = this.getList(type, code.slice(0, compareNum - 2))
 
       code = code.slice(0, compareNum)
@@ -351,9 +354,9 @@ export default {
 
     // 设置对应的下级列表
     setList(type, code = '') {
-      let compareNum = (AREA[type].index + 1) * 2
+      let compareNum = AREA[type].codeLen
       const list = this.getList(type, code.slice(0, compareNum - 2))
-      this.$set(this.columns, compareNum / 2 - 1, list)
+      this.$set(this.columns, AREA[type].index, list)
     },
 
     // 组件初始化时，设置默认值
@@ -365,6 +368,7 @@ export default {
       const [provinceCode, cityCode, countyCode] =
         this.formatValue(this.value) || []
 
+      // 如果 区域码 不存在时 index设为 -1
       const provinceIndex = provinceCode
         ? this.getIndex(AREA.province.name, provinceCode)
         : -1
