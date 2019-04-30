@@ -1,3 +1,4 @@
+```
 <template>
   <div>
     <p>disabled</p>
@@ -15,6 +16,4 @@ export default {
   }
 }
 </script>
-
-<style>
-</style>
+```

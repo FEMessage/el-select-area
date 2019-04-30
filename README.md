@@ -39,8 +39,7 @@
 
 ## Demo
 
-* [online demo](https://femessage.github.io/el-select-area/storybook/)
-* [full api doc](https://femessage.github.io/el-select-area/)
+* [doc and online demo](https://femessage.github.io/el-select-area/)
 
 [⬆ Back to Top](#table-of-contents)
 
