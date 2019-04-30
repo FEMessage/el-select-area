@@ -155,34 +155,35 @@ export default {
   },
 
   watch: {
-    value(val, oldVal) {
+    /**
+     * 由于v-model输出的数据和输入的格式不一致，监听时需要过滤一些无用的输入
+     * 同时确保value改变了才重置列表选项
+     */
+    value(newVal, oldVal) {
+      newVal = this.valueFormatter(newVal)
+      oldVal = this.valueFormatter(oldVal)
       if (
-        !(
-          this.valueFormatter(val).toString() ==
-          this.valueFormatter(oldVal).toString()
-        )
+        newVal.toString() !== oldVal.toString() &&
+        newVal.every(item => isCode(item))
       ) {
-        if (val.every(item => isCode(item))) {
-          this.setValues()
-          this.emitEvent()
-        }
+        this.setValues()
+        this.emitEvent()
       }
     }
   },
 
   methods: {
     valueFormatter(value) {
-      if (value.every(item => item)) {
-        return value.map(item => {
-          if (isCode(item) || typeof item === 'string') {
-            return item
-          } else {
-            return Object.keys(item).pop()
-          }
-        })
-      } else {
-        return []
+      let formated = []
+      for (let i = 0; i < value.length; i++) {
+        const item = value[i]
+        if (item && (isCode(item) || typeof item === 'string')) {
+          formated.push(item)
+        } else {
+          formated.push(Object.keys(item).pop())
+        }
       }
+      return formated
     },
     reset(type) {
       let columnNum = type === 'province' ? 0 : type === 'city' ? 1 : 2

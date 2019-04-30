@@ -20,7 +20,7 @@ export default {
           $default: [],
           $el: {
             placeholders: ['请选择', '请选择', '请选择'],
-            type: 'all'
+            type: 'text'
           },
           rules: [
             {
