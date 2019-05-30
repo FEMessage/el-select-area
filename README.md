@@ -7,19 +7,16 @@
 
 ![introduce](https://i.screenshot.net/8dv1lto)
 
-## Table of Contents
+## Table of Contents <!-- omit in toc -->
 
-* [el-select-area](#el-select-area)
-  * [Table of Contents](#table-of-contents)
-  * [Introduction](#introduction)
-  * [Feature](#feature)
-  * [Demo](#demo)
-  * [Install](#install)
-  * [Example](#example)
-    * [设置级联数](#%E8%AE%BE%E7%BD%AE%E7%BA%A7%E8%81%94%E6%95%B0)
-    * [设置返回值类型](#%E8%AE%BE%E7%BD%AE%E8%BF%94%E5%9B%9E%E5%80%BC%E7%B1%BB%E5%9E%8B)
-  * [Props](#props)
-  * [License](#license)
+* [Introduction](#introduction)
+* [Feature](#feature)
+* [Demo](#demo)
+* [Install](#install)
+* [Example](#example)
+  * [设置级联数](#设置级联数)
+  * [设置返回值类型](#设置返回值类型)
+* [License](#license)
 
 ## Introduction
 
@@ -50,17 +47,16 @@
 yarn add element-ui
 
 # 且注册了el-select el-option
+
+# Step1 安装
+yarn add @femessage/el-select-area
 ```
 
 ```vue
-// Step1 安装
-yarn add @femessage/el-select-area 
-
 // Step2 在需要的.vue 文件中
 <template>
-    <el-select-area v-model="area"></el-select-area>
+  <el-select-area v-model="area" />
 </template>
-
 <script>
 import ElSelectArea from '@femessage/el-select-area'
 
@@ -81,27 +77,15 @@ export default {
 
 ## Example
 
-#### 设置级联数
+### 设置级联数
 
 ![level](https://i.screenshot.net/py2nra3)
 
-#### 设置返回值类型
+### 设置返回值类型
 
 ![res](https://i.screenshot.net/pdy12uz)
 
 [⬆ Back to Top](#table-of-contents)
-
-## Props
-
-| 参数         | 说明                                                              | 类型    | 默认值                                                                                              |
-| ------------ | ----------------------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------- |
-| value        | 范围输入框绑定的值 ( 支持 v-model )                               | Array   | [ ]                                                                                                 |
-| type         | 返回值类型 text->文本，code-> 行政代码，all->对象类型，两者都返回 | String  | code                                                                                                |
-| placeholders | 占位符数组                                                        | Array   | ["请选择","请选择","请选择" ]                                                                       |
-| level        | 级联数，可选 0，1，2                                              | Number  | 2                                                                                                   |
-| size         | select 框大小，同 el-select                                       | String  | medium                                                                                              |
-| disabled     | 是否禁用                                                          | Boolean | false                                                                                               |
-| data         | 省市区区域数据                                                    | Object  | <a href="https://github.com/FEMessage/el-select-area/blob/dev/src/arealist.js">查看详细区域数据</a> |
 
 ## License
 

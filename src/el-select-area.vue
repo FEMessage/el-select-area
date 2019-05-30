@@ -1,7 +1,7 @@
 <template>
   <div class="el-select-area">
     <el-select
-      class='select-area-item'
+      class="select-area-item"
       v-model="indexs[index]"
       :placeholder="placeholders[index]"
       :size="size"
@@ -10,12 +10,7 @@
       :key="index"
       @change="handleOptionChange($event, values[index].type)"
     >
-      <el-option
-        :label="val.name"
-        :value="key"
-        v-for="(val, key) in item"
-        :key="key"
-      ></el-option>
+      <el-option :label="val.name" :value="key" v-for="(val, key) in item" :key="key"></el-option>
     </el-select>
   </div>
 </template>
@@ -62,7 +57,7 @@ export default {
   name: 'ElSelectArea',
   props: {
     /**
-     * 地区选中值，数组，必填，没有选中值，传[]
+     * 地区选中值。若没有选中值，传[]
      * @model
      */
     value: {
@@ -71,7 +66,9 @@ export default {
     },
 
     /**
-     * 返回行政区域代码 text-返回文本 all-返回 code 和 text，默认code
+     * code返回行政区域代码;
+     * text返回文本;
+     * all返回{code: text}
      */
     type: {
       type: String,
@@ -88,22 +85,22 @@ export default {
     },
 
     /**
-     * 级联数，默认为二级级联，最多为三级级联，最小为一级
-     * 可选值 `0, 1, 2`
+     * 级联数，可选值0-->一联；1->二联；2->三联
      */
     level: {
       type: Number,
-      default: 2, // 0-->一联 1->二联 2->三联
-      validator: val => [0, 1, 2].indexOf(val) > -1
+      default: 2,
+      validator: val => [0, 1, 2].includes(val)
     },
 
     /**
-     * select框大小 可选值：'small', 'medium', 'mini'
+     * select框大小，同el-select；
+     * 可选值：small, medium, mini
      */
     size: {
       type: String,
       default: 'medium',
-      validator: val => ['small', 'medium', 'mini'].indexOf(val) > -1
+      validator: val => ['small', 'medium', 'mini'].includes(val)
     },
     /**
      * 是否禁用
@@ -114,9 +111,9 @@ export default {
     },
 
     /**
-     * 数据源，可不填，默认数据格式参考见：`https://github.com/dwqs/area-data`
-     * 经过项目检验，将area-data中的直辖市的数据进行修改，将市辖区修改成相应的直辖市名称并修改成直辖市的code
-     * 且将省市区进行分类，分别对应province_list、city_list、county_list
+     * 数据源，可不填。[默认数据格式](https://github.com/FEMessage/el-select-area/blob/dev/src/arealist.js)；
+     * 经过项目检验，将area-data中的直辖市的数据进行修改，将市辖区修改成相应的直辖市名称并修改成直辖市的code，
+     * 且将省市区进行分类，分别对应province_list、city_list、county_list。
      */
     data: {
       type: Object,
@@ -231,18 +228,14 @@ export default {
       result = result.slice(0, +this.level + 1)
 
       /**
-       * input 事件仅为了绑定v-model, 不了解v-model机制请勿随意调用
-       * @event input
-       * @type {array}
-       * @model
+       * input事件仅为了绑定v-model, 不了解v-model机制请勿随意调用
+       * @property {array} result
        */
       this.$emit('input', result)
 
       /**
        * 当前选中值改变时触发的事件，返回结果根据属性 type 的定义返回相应的数组结果
-       *
-       * @event change
-       * @type {array}
+       * @property {array} result
        */
       this.$emit('change', result)
     },
