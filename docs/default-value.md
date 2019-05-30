@@ -1,12 +1,9 @@
-```
-<template>
-  <div>
-    <p>默认值：</p>
-    <el-select-area v-model="area">
-    </el-select-area>
-  </div>
-</template>
+默认值
 
+```vue
+<template>
+  <el-select-area v-model="area" />
+</template>
 <script>
 export default {
   data() {
