@@ -1,12 +1,9 @@
-```
-<template>
-  <div>
-    <p>基础用法</p>
-    <el-select-area v-model="area">
-    </el-select-area>
-  </div>
-</template>
+基础用法
 
+```vue
+<template>
+  <el-select-area v-model="area" />
+</template>
 <script>
 export default {
   data() {

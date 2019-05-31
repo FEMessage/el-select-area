@@ -1,17 +1,17 @@
-```
+配合el-form-renderer使用
+
+```vue
 <template>
   <el-form-renderer :content="content" ref="ruleForm">
-    <el-button @click="getForm('ruleForm')">获取form</el-button>
-    <el-button @click="updateForm('ruleForm')">更新form</el-button>
-    <el-button @click="resetForm('ruleForm')">重置form</el-button>
+    <el-button @click="getForm">获取form</el-button>
+    <el-button @click="updateForm">更新form</el-button>
+    <el-button @click="resetForm">重置form</el-button>
   </el-form-renderer>
 </template>
-
 <script>
 export default {
   data() {
     return {
-      area: [],
       content: [
         {
           $id: 'area',
@@ -35,16 +35,16 @@ export default {
     }
   },
   methods: {
-    getForm(formName) {
-      console.log(this.$refs[formName].getFormValue())
+    getForm() {
+      console.log(this.$refs.ruleForm.getFormValue())
     },
-    updateForm(formName) {
-      this.$refs[formName].updateForm({
+    updateForm() {
+      this.$refs.ruleForm.updateForm({
         area: ['110000', '110100', '110106']
       })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
+    resetForm() {
+      this.$refs.ruleForm.resetFields();
     }
   }
 }
