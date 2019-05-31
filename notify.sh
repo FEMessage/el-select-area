@@ -1,5 +1,5 @@
 #!/bin/sh
-url=https://api.github.com/repos/femessage/el-select-area/releases/latest
+url=https://api.github.com/repos/FEMessage/el-select-area/releases/latest
 html_url=`curl $url | sed -n 5p | sed 's/\"html_url\"://g' | awk -F '"' '{print $2}'`
 body=`curl $url | grep body | sed 's/\"body\"://g;s/\"//g'`
 
