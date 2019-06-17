@@ -204,6 +204,7 @@ export default {
       let columnNum = AREA[type].index
       this.$set(this.values, columnNum, {code: '', name: '', type: type})
       this.$set(this.indexs, columnNum, '')
+      columnNum > 0 && this.$set(this.columns, columnNum, {})
     },
     // 兼容旧的输出
     emitEvent() {
