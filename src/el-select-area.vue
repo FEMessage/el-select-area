@@ -208,26 +208,28 @@ export default {
     },
     // 兼容旧的输出
     emitEvent() {
+      const type = this.type
       let result
 
-      if (this.type === 'all') {
-        result = this.values.map(item => {
-          const obj = {}
-          item.code && (obj[item.code] = item.name)
-          return obj
-        })
-      }
+      if (type === 'all') {
+        result = this.values
+          .map(item => {
+            const obj = {}
+            item.code && (obj[item.code] = item.name)
+            return obj
+          })
+          .filter(v => Object.keys(v).length)
+      } else {
+        if (type === 'code') {
+          result = this.values.map(item => item.code)
+        } else if (type === 'text') {
+          result = this.values.map(item => item.name)
+        }
 
-      if (this.type === 'code') {
-        result = this.values.map(item => item.code)
-      }
-
-      if (this.type === 'text') {
-        result = this.values.map(item => item.name)
+        result = result.filter(v => v)
       }
 
       result = result.slice(0, +this.level + 1)
-
       /**
        * input事件仅为了绑定v-model, 不了解v-model机制请勿随意调用
        * @property {array} result
