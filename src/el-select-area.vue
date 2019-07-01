@@ -37,6 +37,12 @@ const AREA = {
   }
 }
 
+const TYPE = {
+  all: 'all',
+  code: 'code',
+  text: 'text'
+}
+
 function isCode(value = '') {
   return /^\d{6,}$/.test(value)
 }
@@ -208,22 +214,25 @@ export default {
     },
     // 兼容旧的输出
     emitEvent() {
+      const type = this.type
       let result
 
-      if (this.type === 'all') {
-        result = this.values.map(item => {
-          const obj = {}
-          item.code && (obj[item.code] = item.name)
-          return obj
-        })
-      }
+      if (type === TYPE.all) {
+        result = this.values
+          .map(item => {
+            const obj = {}
+            item.code && (obj[item.code] = item.name)
+            return obj
+          })
+          .filter(v => Object.keys(v).length)
+      } else {
+        if (type === TYPE.code) {
+          result = this.values.map(item => item.code)
+        } else if (type === TYPE.text) {
+          result = this.values.map(item => item.name)
+        }
 
-      if (this.type === 'code') {
-        result = this.values.map(item => item.code)
-      }
-
-      if (this.type === 'text') {
-        result = this.values.map(item => item.name)
+        result = result.filter(v => v)
       }
 
       result = result.slice(0, +this.level + 1)
