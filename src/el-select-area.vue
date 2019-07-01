@@ -37,6 +37,12 @@ const AREA = {
   }
 }
 
+const TYPE = {
+  all: 'all',
+  code: 'code',
+  text: 'text'
+}
+
 function isCode(value = '') {
   return /^\d{6,}$/.test(value)
 }
@@ -211,7 +217,7 @@ export default {
       const type = this.type
       let result
 
-      if (type === 'all') {
+      if (type === TYPE.all) {
         result = this.values
           .map(item => {
             const obj = {}
@@ -220,9 +226,9 @@ export default {
           })
           .filter(v => Object.keys(v).length)
       } else {
-        if (type === 'code') {
+        if (type === TYPE.code) {
           result = this.values.map(item => item.code)
-        } else if (type === 'text') {
+        } else if (type === TYPE.text) {
           result = this.values.map(item => item.name)
         }
 
@@ -230,6 +236,7 @@ export default {
       }
 
       result = result.slice(0, +this.level + 1)
+
       /**
        * input事件仅为了绑定v-model, 不了解v-model机制请勿随意调用
        * @property {array} result
