@@ -10,7 +10,12 @@
       :key="index"
       @change="handleOptionChange($event, values[index].type)"
     >
-      <el-option :label="val.name" :value="key" v-for="(val, key) in item" :key="key"></el-option>
+      <el-option
+        :label="val.name"
+        :value="key"
+        v-for="(val, key) in item"
+        :key="key"
+      ></el-option>
     </el-select>
   </div>
 </template>
@@ -148,9 +153,8 @@ export default {
       setCounty: this.setArea(AREA.county.name),
 
       // 缓存 getList 和 getIndex 的结果
-      getList: memoize(
-        this.getAreaList,
-        (...arg) => (arg[1] ? arg[1] : arg[0])
+      getList: memoize(this.getAreaList, (...arg) =>
+        arg[1] ? arg[1] : arg[0]
       ),
       getIndex: memoize(this.getAreaIndex, (...arg) => arg[1])
     }
@@ -420,6 +424,7 @@ export default {
 .el-select-area {
   font-size: 0;
 }
+
 .el-select-area .select-area-item {
   margin-right: 10px;
   vertical-align: middle;
