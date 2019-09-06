@@ -23,6 +23,13 @@
 <script>
 import arealist from './arealist.js'
 import memoize from 'lodash.memoize'
+import {
+  isCode,
+  formatValue,
+  isBelongToProvince,
+  compareStr,
+  isBelongToCity
+} from './utils'
 
 const AREA = {
   province: {
@@ -46,22 +53,6 @@ const TYPE = {
   all: 'all',
   code: 'code',
   text: 'text'
-}
-
-function isCode(value = '') {
-  return /^\d{6,}$/.test(value)
-}
-
-function isBelongToProvince(code1 = '', code2 = '') {
-  return (
-    isCode(code1) && isCode(code2) && code1.slice(0, 2) === code2.slice(0, 2)
-  )
-}
-
-function isBelongToCity(code1 = '', code2 = '') {
-  return (
-    isCode(code1) && isCode(code2) && code1.slice(0, 4) === code2.slice(0, 4)
-  )
 }
 
 export default {
@@ -145,18 +136,11 @@ export default {
       indexs: ['', '', ''],
 
       // 当前展示的列表
-      columns: [{}, {}, {}],
-
-      // 生成一些函数
-      setProvince: this.setArea(AREA.province.name),
-      setCity: this.setArea(AREA.city.name),
-      setCounty: this.setArea(AREA.county.name),
+      columns: [[], [], []],
 
       // 缓存 getList 和 getIndex 的结果
-      getList: memoize(this.getAreaList, (...arg) =>
-        arg[1] ? arg[1] : arg[0]
-      ),
-      getIndex: memoize(this.getAreaIndex, (...arg) => arg[1])
+      getList: memoize(this._getList, (type, code) => (code ? code : type)),
+      getIndex: memoize(this._getIndex, (type, code) => code)
     }
   },
 
@@ -185,8 +169,8 @@ export default {
      * 同时确保value改变了才重置列表选项
      */
     value(newVal, oldVal) {
-      newVal = this.formatValue(newVal)
-      oldVal = this.formatValue(oldVal)
+      newVal = formatValue(newVal)
+      oldVal = formatValue(oldVal)
       if (
         newVal.toString() !== oldVal.toString() &&
         newVal.every(item => isCode(item))
@@ -198,46 +182,21 @@ export default {
   },
 
   methods: {
-    formatValue(value) {
-      let formated = []
-      for (let i = 0; i < value.length; i++) {
-        const item = value[i]
-        if (item && (isCode(item) || typeof item === 'string')) {
-          formated.push(item)
-        } else {
-          formated.push(Object.keys(item).pop())
-        }
-      }
-      return formated
-    },
     reset(type) {
       let columnNum = AREA[type].index
       this.$set(this.values, columnNum, {code: '', name: '', type: type})
       this.$set(this.indexs, columnNum, '')
-      columnNum > 0 && this.$set(this.columns, columnNum, {})
+      columnNum > 0 && this.$set(this.columns, columnNum, [])
     },
     // 兼容旧的输出
     emitEvent() {
-      const type = this.type
-      let result
-
-      if (type === TYPE.all) {
-        result = this.values
-          .map(item => {
-            const obj = {}
-            item.code && (obj[item.code] = item.name)
-            return obj
-          })
-          .filter(v => Object.keys(v).length)
-      } else {
-        if (type === TYPE.code) {
-          result = this.values.map(item => item.code)
-        } else if (type === TYPE.text) {
-          result = this.values.map(item => item.name)
-        }
-
-        result = result.filter(v => v)
-      }
+      let result = {
+        [TYPE.all]: this.values
+          .map(({code, name}) => (code ? {[code]: name} : {}))
+          .filter(v => Object.keys(v).length),
+        [TYPE.code]: this.values.map(({code}) => code).filter(v => v),
+        [TYPE.text]: this.values.map(({name}) => name).filter(v => v)
+      }[this.type]
 
       result = result.slice(0, +this.level + 1)
 
@@ -256,28 +215,20 @@ export default {
 
     /**
      * 当选中options时，设置当前选中值
-     * @returns {function}
-     * 返回一个设置某个级别的位置的function
      */
-    setArea(type) {
-      let columnNum = AREA[type].index
-      return (item = {}, index = null) => {
-        let {code, name = ''} = item
-        if (!code) return
-        // 传入默认code时补全中文
-        if (!name) {
-          name = this[type][code]
-        }
-        this.$set(this.values, columnNum, {code, name, type})
-        if (index !== null) {
-          this.$set(this.indexs, columnNum, index)
-        }
+    setArea(type, {code, name = this[type][code]} = {}, index) {
+      if (!code) return
+      const columnNum = AREA[type].index
+      // 传入默认code时补全中文
+      this.values.splice(columnNum, 1, {code, name, type})
+      if (index !== undefined) {
+        this.indexs.splice(columnNum, 1, index)
       }
     },
 
     provinceChange(item, index) {
       const {code, name} = item
-      this.setProvince(item)
+      this.setArea(AREA.province.name, item)
       if (this.level >= 1) {
         let city = this.getList(AREA.city.name, code.slice(0, 2))
         this.setList(AREA.city.name, code)
@@ -287,7 +238,7 @@ export default {
 
     cityChange(item, index) {
       const {code, name} = item
-      this.setCity(item, index)
+      this.setArea(AREA.city.name, item, index)
       if (this.level >= 2) {
         let county = this.getList(AREA.county.name, code.slice(0, 4))
         this.setList(AREA.county.name, code)
@@ -297,24 +248,17 @@ export default {
 
     countyChange(item, index) {
       const {code, name} = item
-      this.setCounty(item, index)
+      this.setArea(AREA.county.name, item, index)
     },
 
     // event onchange 触发三个options联动
     handleOptionChange(index, type) {
       let [province, city, county] = this.displayColumns
-      if (type === AREA.province.name) {
-        this.provinceChange(province[index], index)
-      }
-
-      if (type === AREA.city.name) {
-        this.cityChange(city[index], index)
-      }
-
-      if (type === AREA.county.name) {
-        this.countyChange(county[index], index)
-      }
-
+      ;({
+        province: () => this.provinceChange(province[index], index),
+        city: () => this.cityChange(city[index], index),
+        county: () => this.countyChange(county[index], index)
+      }[type]())
       // 暴露事件
       this.emitEvent()
     },
@@ -324,46 +268,28 @@ export default {
      * @param code {String | Number} 区域编码
      * @returns {Array}
      */
-    getAreaList(type, code) {
-      let result = []
-
+    _getList(type, code) {
       // 最高级行政区域可以不需要传入code
-      if (type !== AREA.province.name && !code) {
-        return result
-      }
+      if (type !== AREA.province.name && !code) return []
 
       const list = this[type]
-      result = Object.keys(list).map(listCode => ({
-        code: listCode,
-        name: list[listCode]
-      }))
-      if (code) {
-        result = result.filter(item => item.code.indexOf(code) === 0)
-      }
-
-      return result
+      return Object.keys(list)
+        .filter(key => key.indexOf(code) === 0)
+        .map(code => ({code, name: list[code]}))
     },
 
     // get index by code
-    getAreaIndex(type, code) {
-      let compareNum = AREA[type].codeLen
+    _getIndex(type, code) {
+      const compareNum = AREA[type].codeLen
       const list = this.getList(type, code.slice(0, compareNum - 2))
-
-      code = code.slice(0, compareNum)
-      for (let i = 0; i < list.length; i++) {
-        if (list[i].code.slice(0, compareNum) === code) {
-          return i
-        }
-      }
-
-      return -1
+      return list.findIndex(item => compareStr(item.code, code, compareNum))
     },
 
     // 设置对应的下级列表
     setList(type, code = '') {
-      let compareNum = AREA[type].codeLen
+      const compareNum = AREA[type].codeLen
       const list = this.getList(type, code.slice(0, compareNum - 2))
-      this.$set(this.columns, AREA[type].index, list)
+      this.columns.splice(AREA[type].index, 1, list)
     },
 
     // 组件初始化时，设置默认值
@@ -372,8 +298,7 @@ export default {
       this.setList(AREA.province.name)
 
       // 设置传入的选中值
-      const [provinceCode, cityCode, countyCode] =
-        this.formatValue(this.value) || []
+      const [provinceCode, cityCode, countyCode] = formatValue(this.value)
 
       // 如果 区域码 不存在时 index设为 -1
       const provinceIndex = provinceCode
@@ -385,7 +310,7 @@ export default {
         : -1
 
       if (isCode(provinceCode) && provinceIndex > -1) {
-        this.setProvince({code: provinceCode}, provinceIndex)
+        this.setArea(AREA.province.name, {code: provinceCode}, provinceIndex)
         this.setList(AREA.city.name, provinceCode)
       } else {
         this.reset(AREA.province.name)
@@ -396,7 +321,7 @@ export default {
         this.level >= 1 &&
         cityIndex > -1
       ) {
-        this.setCity({code: cityCode}, cityIndex)
+        this.setArea(AREA.city.name, {code: cityCode}, cityIndex)
         this.setList(AREA.county.name, cityCode)
       } else {
         this.reset(AREA.city.name)
@@ -407,7 +332,7 @@ export default {
         this.level >= 2 &&
         countyIndex > -1
       ) {
-        this.setCounty({code: countyCode}, countyIndex)
+        this.setArea(AREA.county.name, {code: countyCode}, countyIndex)
       } else {
         this.reset(AREA.county.name)
       }
