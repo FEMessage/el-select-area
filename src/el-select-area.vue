@@ -116,6 +116,13 @@ export default {
     data: {
       type: Object,
       default: () => arealist
+    },
+    /**
+     * 是否开启自动填充
+     */
+    autoFill: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -144,7 +151,14 @@ export default {
     },
     // 根据 level 的值返回展示的联级数量
     displayColumns() {
-      return this.columns.slice(0, +this.level + 1)
+      let endIndex
+      if (this.autoFill) {
+        endIndex = this.level + 1
+      } else {
+        const i = this.indexs.indexOf('')
+        endIndex = Math.min(this.level + 1, i > -1 ? i + 1 : 3)
+      }
+      return this.columns.slice(0, endIndex)
     },
     values() {
       return this.indexs.map((index, i) => {
@@ -166,28 +180,27 @@ export default {
         newVal.every(item => isCode(item))
       ) {
         this.setValues()
-        this.emitEvent()
       }
     }
   },
 
   methods: {
-    reset(type) {
-      let columnNum = INDEX[type]
-      this.$set(this.indexs, columnNum, '')
-      columnNum > 0 && this.$set(this.columns, columnNum, [])
-    },
     // 兼容旧的输出
     emitEvent() {
-      let result = {
+      const result = {
         [TYPE.all]: this.values
           .map(({code, name}) => (code ? {[code]: name} : {}))
+          .slice(0, this.level + 1)
           .filter(v => Object.keys(v).length),
-        [TYPE.code]: this.values.map(({code}) => code).filter(v => v),
-        [TYPE.text]: this.values.map(({name}) => name).filter(v => v)
+        [TYPE.code]: this.values
+          .map(({code}) => code)
+          .slice(0, this.level + 1)
+          .filter(v => v),
+        [TYPE.text]: this.values
+          .map(({name}) => name)
+          .slice(0, this.level + 1)
+          .filter(v => v)
       }[this.type]
-
-      result = result.slice(0, +this.level + 1)
 
       /**
        * input事件仅为了绑定v-model, 不了解v-model机制请勿随意调用
@@ -203,20 +216,22 @@ export default {
     },
 
     provinceChange({code}) {
-      if (this.level >= 1) {
-        this.setList(CITY, code)
-        const i = INDEX[CITY]
+      if (this.level < 1) return
+      this.setList(CITY, code)
+      const i = INDEX[CITY]
+      if (this.autoFill) {
         this.indexs.splice(i, 1, 0)
         this.cityChange(this.values[i])
+      } else {
+        this.indexs.splice(i, 1, '')
       }
     },
 
     cityChange({code}) {
-      if (this.level >= 2) {
-        this.setList(COUNTY, code)
-        const i = INDEX[COUNTY]
-        this.indexs.splice(i, 1, 0)
-      }
+      if (this.level < 2) return
+      this.setList(COUNTY, code)
+      const i = INDEX[COUNTY]
+      this.indexs.splice(i, 1, this.autoFill ? 0 : '')
     },
 
     // event onchange 触发三个options联动
@@ -272,36 +287,37 @@ export default {
       const provinceIndex = provinceCode
         ? this.getIndex(PROVINCE, provinceCode)
         : -1
+      if (!isCode(provinceCode) || provinceIndex === -1) {
+        this.indexs = ['', '', '']
+        this.columns.splice(1, 2, [], [])
+        return
+      }
+      this.indexs.splice(INDEX[PROVINCE], 1, provinceIndex)
+      this.setList(CITY, provinceCode)
+
       const cityIndex = cityCode ? this.getIndex(CITY, cityCode) : -1
+      if (
+        !isBelongToProvince(provinceCode, cityCode) ||
+        this.level < 1 ||
+        cityIndex === -1
+      ) {
+        this.indexs.splice(1, 2, '', '')
+        this.columns.splice(2, 1, [])
+        return
+      }
+      this.indexs.splice(INDEX[CITY], 1, cityIndex)
+      this.setList(COUNTY, cityCode)
+
       const countyIndex = countyCode ? this.getIndex(COUNTY, countyCode) : -1
-
-      if (isCode(provinceCode) && provinceIndex > -1) {
-        this.indexs.splice(INDEX[PROVINCE], 1, provinceIndex)
-        this.setList(CITY, provinceCode)
-      } else {
-        this.reset(PROVINCE)
-      }
-
       if (
-        isBelongToProvince(provinceCode, cityCode) &&
-        this.level >= 1 &&
-        cityIndex > -1
+        !isBelongToCity(countyCode, cityCode) ||
+        this.level < 2 ||
+        countyIndex === -1
       ) {
-        this.indexs.splice(INDEX[CITY], 1, cityIndex)
-        this.setList(COUNTY, cityCode)
-      } else {
-        this.reset(CITY)
+        this.indexs.splice(2, 1, '')
+        return
       }
-
-      if (
-        isBelongToCity(countyCode, cityCode) &&
-        this.level >= 2 &&
-        countyIndex > -1
-      ) {
-        this.indexs.splice(INDEX[COUNTY], 1, countyIndex)
-      } else {
-        this.reset(COUNTY)
-      }
+      this.indexs.splice(INDEX[COUNTY], 1, countyIndex)
     }
   },
 
