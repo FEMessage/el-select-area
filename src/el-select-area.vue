@@ -34,7 +34,7 @@ import {
 const PROVINCE = 'province'
 const CITY = 'city'
 const COUNTY = 'county'
-const COLUMN_INDEX = {
+const INDEX = {
   [PROVINCE]: 0,
   [CITY]: 1,
   [COUNTY]: 2
@@ -121,15 +121,8 @@ export default {
 
   data() {
     return {
-      // 当前选中的值
-      values: [
-        {code: '', name: '', type: PROVINCE},
-        {code: '', name: '', type: CITY},
-        {code: '', name: '', type: COUNTY}
-      ],
-
       // 当前选中的索引
-      indexs: [-1, -1, -1],
+      indexs: ['', '', ''],
 
       // 当前展示的列表
       columns: [[], [], []],
@@ -152,6 +145,11 @@ export default {
     // 根据 level 的值返回展示的联级数量
     displayColumns() {
       return this.columns.slice(0, +this.level + 1)
+    },
+    values() {
+      return this.indexs.map((index, i) => {
+        return this.columns[i] ? {...this.columns[i][index]} : {}
+      })
     }
   },
 
@@ -175,9 +173,8 @@ export default {
 
   methods: {
     reset(type) {
-      let columnNum = COLUMN_INDEX[type]
-      this.$set(this.values, columnNum, {code: '', name: '', type: type})
-      this.$set(this.indexs, columnNum, -1)
+      let columnNum = INDEX[type]
+      this.$set(this.indexs, columnNum, '')
       columnNum > 0 && this.$set(this.columns, columnNum, [])
     },
     // 兼容旧的输出
@@ -205,51 +202,30 @@ export default {
       this.$emit('change', result)
     },
 
-    /**
-     * 当选中options时，设置当前选中值
-     */
-    setArea(type, {code, name = this.areaData[type][code]} = {}, index) {
-      if (!code) return
-      const columnNum = COLUMN_INDEX[type]
-      // 传入默认code时补全中文
-      this.values.splice(columnNum, 1, {code, name, type})
-      if (index !== undefined) {
-        this.indexs.splice(columnNum, 1, index)
-      }
-    },
-
-    provinceChange(item, index) {
-      const {code, name} = item
-      this.setArea(PROVINCE, item)
+    provinceChange({code}) {
       if (this.level >= 1) {
-        let city = this.getList(CITY, code.slice(0, 2))
         this.setList(CITY, code)
-        this.cityChange(city[0], 0)
+        const i = INDEX[CITY]
+        this.indexs.splice(i, 1, 0)
+        this.cityChange(this.values[i])
       }
     },
 
-    cityChange(item, index) {
-      const {code, name} = item
-      this.setArea(CITY, item, index)
+    cityChange({code}) {
       if (this.level >= 2) {
-        let county = this.getList(COUNTY, code.slice(0, 4))
         this.setList(COUNTY, code)
-        this.countyChange(county[0], 0)
+        const i = INDEX[COUNTY]
+        this.indexs.splice(i, 1, 0)
       }
-    },
-
-    countyChange(item, index) {
-      const {code, name} = item
-      this.setArea(COUNTY, item, index)
     },
 
     // event onchange 触发三个options联动
     handleOptionChange(index, type) {
-      let [province, city, county] = this.displayColumns
+      const [province, city, county] = this.columns
       ;({
-        [PROVINCE]: () => this.provinceChange(province[index], index),
-        [CITY]: () => this.cityChange(city[index], index),
-        [COUNTY]: () => this.countyChange(county[index], index)
+        [PROVINCE]: () => this.provinceChange(province[index]),
+        [CITY]: () => this.cityChange(city[index]),
+        [COUNTY]: () => {}
       }[type]())
       // 暴露事件
       this.emitEvent()
@@ -267,7 +243,7 @@ export default {
       const list = this.areaData[type]
       return Object.keys(list)
         .filter(key => key.indexOf(code) === 0)
-        .map(code => ({code, name: list[code]}))
+        .map(code => ({code, name: list[code], type}))
     },
 
     // get index by code
@@ -281,7 +257,7 @@ export default {
     setList(type, code = '') {
       const compareNum = CODE_LEN[type]
       const list = this.getList(type, code.slice(0, compareNum - 2))
-      this.columns.splice(COLUMN_INDEX[type], 1, list)
+      this.columns.splice(INDEX[type], 1, list)
     },
 
     // 组件初始化时，设置默认值
@@ -300,7 +276,7 @@ export default {
       const countyIndex = countyCode ? this.getIndex(COUNTY, countyCode) : -1
 
       if (isCode(provinceCode) && provinceIndex > -1) {
-        this.setArea(PROVINCE, {code: provinceCode}, provinceIndex)
+        this.indexs.splice(INDEX[PROVINCE], 1, provinceIndex)
         this.setList(CITY, provinceCode)
       } else {
         this.reset(PROVINCE)
@@ -311,7 +287,7 @@ export default {
         this.level >= 1 &&
         cityIndex > -1
       ) {
-        this.setArea(CITY, {code: cityCode}, cityIndex)
+        this.indexs.splice(INDEX[CITY], 1, cityIndex)
         this.setList(COUNTY, cityCode)
       } else {
         this.reset(CITY)
@@ -322,7 +298,7 @@ export default {
         this.level >= 2 &&
         countyIndex > -1
       ) {
-        this.setArea(COUNTY, {code: countyCode}, countyIndex)
+        this.indexs.splice(INDEX[COUNTY], 1, countyIndex)
       } else {
         this.reset(COUNTY)
       }
