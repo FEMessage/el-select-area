@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/FEMessage/el-select-area/compare/v2.0.6...v2.1.0) (2019-09-10)
+
+
+### Features
+
+* 添加auto-fill属性 ([#47](https://github.com/FEMessage/el-select-area/issues/47)) ([7b97120](https://github.com/FEMessage/el-select-area/commit/7b97120))
+
+
+
 ### [2.0.6](https://github.com/FEMessage/el-select-area/compare/v2.0.5...v2.0.6) (2019-07-01)
 
 
