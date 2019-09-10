@@ -7,16 +7,16 @@
 
 ![introduce](https://i.screenshot.net/8dv1lto)
 
-## Table of Contents <!-- omit in toc -->
+## Table of Contents
 
-* [Introduction](#introduction)
-* [Feature](#feature)
-* [Demo](#demo)
-* [Install](#install)
-* [Example](#example)
-  * [设置级联数](#设置级联数)
-  * [设置返回值类型](#设置返回值类型)
-* [License](#license)
+- [Introduction](#introduction)
+- [Feature](#feature)
+- [Demo](#demo)
+- [Install](#install)
+- [Example](#example)
+  - [设置级联数](#设置级联数)
+  - [设置返回值类型](#设置返回值类型)
+- [License](#license)
 
 ## Introduction
 
@@ -28,15 +28,15 @@
 
 ## Feature
 
-* 可调整联动的级别
-* 可选返回值类型
-* 可自定义区域数据信息
+- 可调整联动的级别
+- 可选返回值类型
+- 可自定义区域数据信息
 
 [⬆ Back to Top](#table-of-contents)
 
 ## Demo
 
-* [doc and online demo](https://femessage.github.io/el-select-area/)
+- [doc and online demo](https://femessage.github.io/el-select-area/)
 
 [⬆ Back to Top](#table-of-contents)
 
