@@ -4,8 +4,7 @@
       class="select-area-item"
       v-model="indexs[index]"
       :placeholder="placeholders[index]"
-      :size="size"
-      :disabled="disabled"
+      v-bind="$attrs"
       v-for="(item, index) in displayColumns"
       :key="index"
       @change="handleOptionChange($event, values[index].type)"
@@ -53,6 +52,7 @@ const TYPE = {
 
 export default {
   name: 'ElSelectArea',
+  inheritAttrs: false,
   props: {
     /**
      * 地区选中值。若没有选中值，传[]
@@ -90,24 +90,6 @@ export default {
       default: 2,
       validator: val => [0, 1, 2].includes(val)
     },
-
-    /**
-     * select框大小，同el-select；
-     * 可选值：small, medium, mini
-     */
-    size: {
-      type: String,
-      default: 'medium',
-      validator: val => ['small', 'medium', 'mini'].includes(val)
-    },
-    /**
-     * 是否禁用
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-
     /**
      * 数据源，可不填。[默认数据格式](https://github.com/FEMessage/el-select-area/blob/dev/src/arealist.js)；
      * 经过项目检验，将area-data中的直辖市的数据进行修改，将市辖区修改成相应的直辖市名称并修改成直辖市的code，
