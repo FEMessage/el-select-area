@@ -13,6 +13,7 @@
 - [Feature](#feature)
 - [Demo](#demo)
 - [Install](#install)
+- [DataSource](#datasource)
 - [Example](#example)
   - [设置级联数](#设置级联数)
   - [设置返回值类型](#设置返回值类型)
@@ -72,6 +73,19 @@ export default {
 }
 </script>
 ```
+
+[⬆ Back to Top](#table-of-contents)
+
+## DataSource
+
+为了统一移动端和 PC 端的省市区列表数据，减少维护数据的成本，该组件默认使用有赞 [vant-ui](https://youzan.github.io/vant/#/zh-CN/area) 的[省市区列表数据](https://github.com/youzan/vant/blob/dev/src/area/demo/area.js)
+
+### 国内官方数据源
+- 国家统计局：[统计用区划代码和城乡划分代码](http://www.stats.gov.cn/tjsj/tjbz/tjyqhdmhcxhfdm/2018/index.html)
+- 国家民政部：[中华人民共和国行政区划代码](http://www.mca.gov.cn/article/sj/xzqh/2019/)
+
+### 快速生成工具
+- [area-puppeteer](https://github.com/dwqs/area-puppeteer)
 
 [⬆ Back to Top](#table-of-contents)
 
