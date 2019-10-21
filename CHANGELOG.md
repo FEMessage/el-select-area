@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.1.2](https://github.com/FEMessage/el-select-area/compare/v2.1.1...v2.1.2) (2019-10-21)
+
+
+### Bug Fixes
+
+* 更改省级选择器时，应该重置市级和区级选择器 ([#60](https://github.com/FEMessage/el-select-area/issues/60)) ([2feaaee](https://github.com/FEMessage/el-select-area/commit/2feaaee))
+
+
+
 ### [2.1.1](https://github.com/FEMessage/el-select-area/compare/v2.1.0...v2.1.1) (2019-10-16)
 
 
