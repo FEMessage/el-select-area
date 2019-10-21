@@ -206,6 +206,7 @@ export default {
         this.cityChange(this.values[i])
       } else {
         this.indexs.splice(i, 1, '')
+        this.indexs.splice(i+1, 1, '')
       }
     },
 
