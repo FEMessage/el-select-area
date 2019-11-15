@@ -5,7 +5,7 @@
 [![NPM License](https://img.shields.io/npm/l/@femessage/el-select-area.svg)](https://github.com/FEMessage/el-select-area/blob/master/LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/FEMessage/el-select-area/pulls)
 
-![introduce](https://i.screenshot.net/8dv1lto)
+![introduce](https://i.loli.net/2019/11/15/zLyDEc18gFaRk5t.gif)
 
 ## Table of Contents
 
@@ -93,11 +93,11 @@ export default {
 
 ### 设置级联数
 
-![level](https://i.screenshot.net/py2nra3)
+![level](https://i.loli.net/2019/11/15/sVt67SqeMJYaKPm.gif)
 
 ### 设置返回值类型
 
-![res](https://i.screenshot.net/pdy12uz)
+![res](https://i.loli.net/2019/11/15/OgvHftz8YuU7N9L.gif)
 
 [⬆ Back to Top](#table-of-contents)
 
