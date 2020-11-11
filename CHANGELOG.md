@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/FEMessage/el-select-area/compare/v2.1.2...v2.2.0) (2020-11-11)
+
+
+### Features
+
+* add types ([#75](https://github.com/FEMessage/el-select-area/issues/75)) ([c983c65](https://github.com/FEMessage/el-select-area/commit/c983c65))
+
+
+
 ### [2.1.2](https://github.com/FEMessage/el-select-area/compare/v2.1.1...v2.1.2) (2019-10-21)
 
 
