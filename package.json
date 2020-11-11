@@ -24,6 +24,7 @@
   "browser": {
     "./sfc": "src/el-select-area.vue"
   },
+  "types": "src/el-select-area.d.ts",
   "scripts": {
     "dev": "vue-styleguidist server",
     "doc": "vue-styleguidist build",
